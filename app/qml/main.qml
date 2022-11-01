@@ -69,7 +69,7 @@ ApplicationWindow {
 
     property string wintitle: appSettings.wintitle
 
-    color: "#00000000"
+    color: "#000000"
 
     title: terminalContainer.title || qsTr(appSettings.wintitle)
 
