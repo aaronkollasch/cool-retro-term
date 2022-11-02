@@ -281,7 +281,7 @@ Item {
                  : "") +
 
                  (jitter !== 0 || staticNoise !== 0 ?
-                     "vec4 noiseTexel = texture2D(noiseSource, scaleNoiseSize * coords + vec2(fract(time / 51.0), fract(time / 237.0)));"
+                     "vec4 noiseTexel = texture2D(noiseSource, scaleNoiseSize * coords + vec2(fract(time / 31.0), fract(time / 177.0)));"
                  : "") +
 
                  (jitter !== 0 ? "
