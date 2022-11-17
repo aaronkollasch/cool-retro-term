@@ -1,5 +1,6 @@
 set export
 
+ENV_PATH := env_var('PATH')
 PATH := "/opt/homebrew/opt/qt@5/bin:/usr/local/bin:/usr/bin:/bin"
 LDFLAGS := "-L/opt/homebrew/opt/qt@5/lib"
 LFLAGS := "-L/opt/homebrew/opt/qt@5/lib"
@@ -22,16 +23,21 @@ build:
     cp -r qmltermwidget/QMLTermWidget cool-retro-term.app/Contents/PlugIns
 
     # https://juju.one/change-mac-gui-app-environment-variable/
-    /usr/libexec/PlistBuddy -c "Add :LSEnvironment:LANG string" cool-retro-term.app/Contents/Info.plist
-    /usr/libexec/PlistBuddy -c "Set :LSEnvironment:LANG en_US.UTF-8" cool-retro-term.app/Contents/Info.plist
+    [ ! -f /usr/libexec/PlistBuddy ] || /usr/libexec/PlistBuddy -c "Add :LSEnvironment:LANG string" cool-retro-term.app/Contents/Info.plist
+    [ ! -f /usr/libexec/PlistBuddy ] || /usr/libexec/PlistBuddy -c "Set :LSEnvironment:LANG en_US.UTF-8" cool-retro-term.app/Contents/Info.plist
 
 clean:
     make clean
 
 run:
-    /opt/homebrew/bin/just build
+    #!/usr/bin/env bash
+    PATH=$ENV_PATH just build
     # run the binary directly
-    env -i PATH=$PATH HOME=$HOME LANG=en_US.UTF-8 ./cool-retro-term.app/Contents/MacOS/cool-retro-term
+    if [[ "$(uname -s)" == Linux ]]; then
+        ./cool-retro-term
+    else
+        env -i PATH=$PATH HOME=$HOME LANG=en_US.UTF-8 ./cool-retro-term.app/Contents/MacOS/cool-retro-term
+    fi
     # or, open the .app
     # # reload Info.plist
     # /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -v -f cool-retro-term.app
